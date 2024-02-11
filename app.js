@@ -154,7 +154,4 @@ app.get('/districts/:districtId/details/', async (request, response) => {
   response.send({stateName: stateName.state_name})
 })
 
-module.export = app
-
-//https://github.com/Sreekarpothu/not-wroking.git
-//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
+module.exports = app;
