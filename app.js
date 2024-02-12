@@ -36,7 +36,7 @@ const convertDistrictDbObjectToResponseObject = dbObject => {
     stateId: dbObject.state_id,
     cases: dbObject.cases,
     cured: dbObject.cured,
-    active: dbObject.cured,
+    active: dbObject.active,
     deaths: dbObject.deaths,
   }
 }
@@ -143,15 +143,19 @@ app.get('states/:stateId/stats/', async (request, response) => {
   response.send(resultReport)
 })
 
-app.get('/districts/:districtId/details/', async (request, response) => {
-  const {districtId} = request.params
-  const stateDetails = `
-  select state_name
-  from state join district
-  on state.state_id = district.state_id
-  where district.district_id = ${districtId};`
-  const stateName = await database.get(stateDetails)
-  response.send({stateName: stateName.state_name})
-})
+app.get("/districts/:districtId/details/", async (request, response) => {
+  const { districtId } = request.params;
+  const getStateNameQuery = `
+    SELECT
+      state_name
+    FROM
+      district
+    NATURAL JOIN
+      state
+    WHERE 
+      district_id=${districtId};`;
+  const state = await database.get(getStateNameQuery);
+  response.send({ stateName: state.state_name });
+});
 
-module.exports = app;
+module.exports = app
