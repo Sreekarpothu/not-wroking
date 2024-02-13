@@ -87,7 +87,7 @@ app.post('/districts/', async (request, response) => {
   response.send('District Successfully Added')
 })
 
-app.get('districts/:districtId/', async (request, response) => {
+app.get('/districts/:districtId/', async (request, response) => {
   const {districtId} = request.params
   const getDistrictIdQuery = `
   select
@@ -129,22 +129,22 @@ app.put('/districts/:districtId/', async (request, response) => {
   response.send('District Details Updated')
 })
 
-app.get('states/:stateId/stats/', async (request, response) => {
+app.get('/states/:stateId/stats/', async (request, response) => {
   const {stateId} = request.params
   const getStateQuery = `
-  select sum(cases) as cases.
+  select sum(cases) as cases,
   sum(cured) as cured,
   sum(active) as active,
   sum(deaths) as deaths
-  from distict
+  from district
   where state_id = ${stateId};`
   const stateReport = await database.get(getStateQuery)
   const resultReport = convertStateDbObjectToResponseObject(stateReport)
   response.send(resultReport)
 })
 
-app.get("/districts/:districtId/details/", async (request, response) => {
-  const { districtId } = request.params;
+app.get('/districts/:districtId/details/', async (request, response) => {
+  const {districtId} = request.params
   const getStateNameQuery = `
     SELECT
       state_name
@@ -153,9 +153,9 @@ app.get("/districts/:districtId/details/", async (request, response) => {
     NATURAL JOIN
       state
     WHERE 
-      district_id=${districtId};`;
-  const state = await database.get(getStateNameQuery);
-  response.send({ stateName: state.state_name });
-});
+      district_id=${districtId};`
+  const state = await database.get(getStateNameQuery)
+  response.send({stateName: state.state_name})
+})
 
 module.exports = app
